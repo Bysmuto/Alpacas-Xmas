@@ -1,0 +1,295 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&display=swap"); */
+
+@font-face {
+  font-family: "Silkscreen";
+  src: url("/fonts/Silkscreen-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Silkscreen";
+  src: url("/fonts/Silkscreen-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+:root {
+  --corner: 3px;
+}
+
+* {
+  font-family: "Silkscreen", system-ui;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+
+  background-image: url("/imgs/bg4.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+button {
+  background: #1acc09;
+  color: #000;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 12px 20px;
+  margin: 5px;
+  border-left: 5px solid #000;
+  border-bottom: 5px solid #000;
+  box-shadow: var(--corner) 0 #000, calc(-1 * var(--corner)) 0 #000, 0 var(--corner) #000,
+    0 calc(-1 * var(--corner)) #000;
+  text-transform: uppercase var(--corner);
+  cursor: pointer;
+}
+
+button:hover {
+  background: #e74c3c;
+  color: white;
+}
+
+button:active {
+  box-shadow: 0 2px #000;
+  transform: translateY(2px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+#playPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#logoPlayPage {
+  width: 50vw;
+  margin-bottom: 90px;
+}
+
+#playBtn {
+  font-size: 40px;
+}
+
+/* userPage */
+.title {
+  font-size: 200%;
+  font-weight: bold;
+}
+
+#userPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  /* background: #000; */
+}
+
+#usersDiv {
+  margin-top: 40px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+#usersDiv button {
+  font-size: 25px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#wheelPage button {
+  font-size: 20px;
+
+  margin-top: -15px;
+  padding: 10px 20px;
+}
+
+#wheelPage > .title {
+  font-size: 140%;
+  font-weight: bold;
+
+  margin-top: 15px;
+}
+
+.wheel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.wheel-wrapper {
+  position: relative;
+  width: 40vw;
+  aspect-ratio: 1 / 1; /* keeps it a perfect square */
+}
+
+#wheelBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#wheel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#winnerPopup {
+
+  position: fixed;
+  inset: 0;
+  display: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-weight: bold;
+  animation: pop 0.8s ease;
+
+    flex-direction: column;
+  justify-content: center; /* vertical alignment */
+  align-items: center; /* horizontal alignment */
+  height: 100vh;
+}
+
+#winnerPopup h1 {
+  font-size: 450%;  animation: blink 1s infinite alternate;
+}
+@keyframes blink {
+  /* 0% { color: rgb(250, 250, 250); } */
+  25% { color: lime;}
+  50% { color: red; }
+  100%  { color: rgb(250, 250, 250); }
+}
+#winnerPopup p {
+  font-size: 90%;
+  margin-bottom: 5px;
+}
+
+#winnerPopup button {
+ margin-top: 0;
+ font-size: 100%;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0);
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.snow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.snowflake {
+  position: absolute;
+  top: -10px;
+  color: white;
+  font-size: 1em;
+  opacity: 0.8;
+  animation: fall linear infinite;
+  text-shadow: 0 0 5px #000;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    height: 90vh;
+    margin-top: 5vh;
+  }
+
+  /* #playPage {
+  } */
+  #logoPlayPage {
+    width: 90vw;
+    margin-bottom: 10px;
+  }
+
+  .title {
+    font-size: 190%;
+    line-height: 1.2;
+  }
+
+  #userPage > .title {
+    font-size: 140%;
+  }
+
+  #usersDiv {
+    margin-top: 20px;
+    width: 95vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  #usersDiv button {
+    font-size: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  #wheelPage > .title {
+    font-size: 100%;
+    font-family: "Silkscreen";
+    /* text-align: left;
+    padding-left: 40px; */
+    line-height: 1.2;
+  }
+
+  .wheel-wrapper {
+    width: 100vw;
+  }
+
+  #winnerPopup h1 {
+  font-size: 250%;
+}
+
+#wheelPage button {
+  font-size: 16px;
+
+  margin-top: 10px;
+  padding: 10px 18px;
+}
+
+}

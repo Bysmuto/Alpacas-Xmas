@@ -1,0 +1,205 @@
+import { ref, onValue, db, get } from "/firebase.js";
+import { playTick, winSound, preRollSound } from "/assets.js";
+import { nextPage } from "/functionalities.js";
+
+//global variables
+const spinBtn = document.getElementById("spin");
+
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+
+let currentRotation = 0;
+let isSpinning = false;
+let dataCache, names, user, winner;
+
+function drawWheel(names) {
+  //config
+  const colors = ["#da1021ff", "#2ab91dff"];
+  const font = 'bold 18px "Silkscreen"';
+  const centerClose = 3.9;
+  const lineColor = "#700c0cff";
+  const scale = 0.35;
+  const lineWidth = 6;
+
+  let r = 200;
+
+  const offCanvas = document.createElement("canvas");
+  offCanvas.width = canvas.width * scale;
+  offCanvas.height = canvas.height * scale;
+  const offCtx = offCanvas.getContext("2d");
+
+  const centerXOff = offCanvas.width / 2;
+  const centerYOff = offCanvas.height / 2;
+  const radiusOff = r * scale;
+  const anglePerSegment = (2 * Math.PI) / names.length;
+
+  for (let i = 0; i < names.length; i++) {
+    const startAngle = i * anglePerSegment + currentRotation - Math.PI / 2;
+    const endAngle = (i + 1) * anglePerSegment + currentRotation - Math.PI / 2;
+
+    offCtx.beginPath();
+    offCtx.arc(centerXOff, centerYOff, radiusOff, startAngle, endAngle);
+    offCtx.lineTo(centerXOff, centerYOff);
+    offCtx.fillStyle = colors[i % colors.length];
+    offCtx.fill();
+    offCtx.strokeStyle = lineColor;
+    offCtx.lineWidth = lineWidth * scale;
+    offCtx.stroke();
+  }
+
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(
+    offCanvas,
+    0,
+    0,
+    offCanvas.width,
+    offCanvas.height,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  const radius = r;
+  ctx.font = font;
+  ctx.fillStyle = "#fff";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  for (let i = 0; i < names.length; i++) {
+    const startAngle = i * anglePerSegment + currentRotation - Math.PI / 2;
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(startAngle + anglePerSegment / 2);
+    ctx.fillText(names[i], radius / centerClose, 0);
+    ctx.restore();
+  }
+}
+
+function announceWinner(name) {
+  const popup = document.getElementById("winnerPopup");
+  winSound.play();
+
+  get(ref(db, "MembersInfo")).then((snapshot) => {
+    const data = snapshot.val();
+
+    const { nome, endereço, telefone } = data[name];
+    const info = `${"endereço: " + endereço + "/ nome: " + nome + "/ telefone: " + telefone}`;
+
+    popup.innerHTML = `
+    <h1>${name}</h1>
+    <div class="info">
+       <p>${nome}</p>
+      <p>${endereço}</p>
+      <p>${telefone}</p>
+    </div>
+     <button onclick="navigator.clipboard.writeText('${info}')">copiar info</button>
+   
+    `;
+
+    popup.style.display = "flex";
+  });
+}
+
+function spin(Winner, names) {
+  if (isSpinning || !Winner || !user) return;
+
+  isSpinning = true;
+  spinBtn.disabled = true;
+
+  const spins = 2;
+  const spinDuration = spins * 2000;
+
+  const anglePerSegment = (2 * Math.PI) / names.length;
+  const randomOffset = (Math.random() - 0.5) * anglePerSegment * 0.9;
+  const targetRotation =
+    ((names.length - names.indexOf(Winner) - 1) * anglePerSegment +
+      anglePerSegment / 2 +
+      randomOffset) %
+    (2 * Math.PI);
+  const totalRotation = spins * 2 * Math.PI + targetRotation;
+  const startRotation = 0;
+  currentRotation = 0;
+  const startTime = Date.now();
+
+  let lastSliceIndex = null;
+
+  function animate() {
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(elapsed / spinDuration, 1);
+
+    const easeInOut =
+      progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+    currentRotation = startRotation + easeInOut * totalRotation;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawWheel(names);
+
+    // tick sync
+    const sliceIndex = Math.floor(
+      ((-currentRotation + anglePerSegment / 2) / anglePerSegment) % names.length
+    );
+    const normalizedIndex = (sliceIndex + names.length) % names.length;
+    if (normalizedIndex !== lastSliceIndex) {
+      playTick();
+      lastSliceIndex = normalizedIndex;
+    }
+
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      isSpinning = false;
+      spinBtn.disabled = true;
+      announceWinner(`${Winner}`);
+    }
+  }
+
+  animate();
+}
+
+function userSelect(names, data) {
+  const usersDiv = document.getElementById("usersDiv");
+
+  let possibleUser = data
+    .filter((p) => p[1].participant === true)
+    .filter((p) => p[1].hasPicked === false)
+    .map((p) => p[0]);
+
+  names.forEach((name) => {
+    const btn = document.createElement("button");
+    btn.textContent = name;
+    if (possibleUser.includes(name)) {
+      btn.onclick = () => {
+        user = name;
+        winner = dataCache.find(([name]) => name === user)[1].secretSanta;
+        console.log(user + "->" + winner);
+        nextPage("wheel");
+      };
+    }
+
+    usersDiv.appendChild(btn);
+  });
+}
+
+spinBtn.onclick = () => {
+  preRollSound.play();
+  
+  setTimeout(() => {
+    spin(winner, names);
+  }, 1200);
+};
+
+get(ref(db, "Alpacas")).then((snapshot) => {
+  if (snapshot.exists()) {
+    const data = Object.entries(snapshot.val())
+    names = data.map((p) => p[0])
+    console.log(data)
+    dataCache = data
+    drawWheel(names)
+    userSelect(names, data)
+  } 
+})
+

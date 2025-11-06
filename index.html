@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spin Wheel</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- <div id="playPage" style="display: none"> -->
+      <div id="playPage" >
+      <img src="/imgs/logo.png" id="logoPlayPage" />
+      <button id="playBtn">Play</button>
+    </div>
+
+    <div id="userPage" style="display: none">
+      <!-- <div id="userPage"> -->
+      <h1 class="title">Selecione seu nome</h1>
+
+      <div id="usersDiv"></div>
+
+    </div>
+
+    <div id="wheelPage" class="wheel-container" style="display: none">
+    <!-- <div id="wheelPage" class="wheel-container"> -->
+      <h1 class="title">Seu alpaca secreto é...</h1>
+
+      <div class="wheel-wrapper">
+        <canvas id="wheel" width="500" height="500"></canvas>
+        <img src="/imgs/roletaBg.gif" id="wheelBg" />
+      </div>
+      <button id="spin">ROLETAR!</button>
+      <div id="winnerPopup"></div>
+    </div>
+
+    <div class="snow"></div>
+  </body>
+  <script type="module" src="script.js"></script>
+<script type="module" src="secretSanta.js"></script>
+</html>
