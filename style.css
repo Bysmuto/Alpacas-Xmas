@@ -15,7 +15,6 @@
 
 :root {
   --corner: 5px;
-  --cornerMobile: 6px;
 }
 
 * {
@@ -35,7 +34,7 @@ body {
   height: 100vh;
 
   position: relative;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   min-height: 100vh;
 }
 
