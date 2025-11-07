@@ -1,4 +1,4 @@
-import { ref, set, db, push } from "/firebase.js";
+import { ref, set, db, push } from "./firebase.js";
 
 const members = [
   "Arthur",

@@ -1,4 +1,4 @@
-// import {playTick,winSound,bgSound} from "/assets.js";
+import {bgSound} from "./assets.js";
 
 const spinBtn = document.getElementById("spin");
 const playBTn = document.getElementById("playBtn");
@@ -21,7 +21,7 @@ function nextPage(page) {
 
 playBTn.onclick = () => {
 
-//   bgSound.play();
+  bgSound.play();
   nextPage("user");
 };
 
@@ -36,7 +36,7 @@ playBTn.onclick = () => {
       snowflake.classList.add("snowflake");
       snowflake.textContent = "*";
       snowflake.style.left = Math.random() * 100 + "vw";
-      snowflake.style.fontSize = Math.random() * 10 + 15 + "px";
+      snowflake.style.fontSize = Math.random() * 10 + 25 + "px";
       snowflake.style.animationDuration = Math.random() * 3 + 2 + "s";
       snowflake.style.opacity = Math.random();
 

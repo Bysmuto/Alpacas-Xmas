@@ -1,6 +1,6 @@
-import { ref, onValue, db, get } from "/firebase.js";
-import { playTick, winSound, preRollSound } from "/assets.js";
-import { nextPage } from "/functionalities.js";
+import { ref, db, get } from "./firebase.js";
+import { playTick, winSound, preRollSound } from "./assets.js";
+import { nextPage } from "./functionalities.js";
 
 //global variables
 const spinBtn = document.getElementById("spin");
@@ -15,11 +15,12 @@ let dataCache, names, user, winner;
 function drawWheel(names) {
   //config
   const colors = ["#da1021ff", "#2ab91dff"];
-  const font = 'bold 18px "Silkscreen"';
+  const font = 'bold 16px "Silkscreen"';
   const centerClose = 3.9;
-  const lineColor = "#700c0cff";
-  const scale = 0.35;
-  const lineWidth = 6;
+  // const lineColor = "#700c0cff";
+    const lineColor = "#1b1010ff";
+  const scale = 0.32;
+  const lineWidth = 8;
 
   let r = 200;
 
@@ -109,7 +110,7 @@ function spin(Winner, names) {
   isSpinning = true;
   spinBtn.disabled = true;
 
-  const spins = 2;
+  const spins = 16;
   const spinDuration = spins * 2000;
 
   const anglePerSegment = (2 * Math.PI) / names.length;
