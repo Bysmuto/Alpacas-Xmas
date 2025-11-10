@@ -30,6 +30,12 @@ body {
   min-height: 100vh;
   background: #fff;
   position: relative;
+  user-select: none;
+}
+
+img {
+  pointer-events: none;
+  user-select: none;
 }
 
 body::before {
@@ -103,8 +109,12 @@ button:disabled {
   font-weight: bold;
 }
 
+#signUser {
+  width: 29vw;
+  margin-bottom: 20px;
+}
+
 #usersDiv {
-  margin-top: 40px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
@@ -171,7 +181,7 @@ button:disabled {
 
 #winnerPopup button {
   margin: 0;
- 
+
   font-size: 100%;
 }
 
@@ -226,9 +236,8 @@ button:disabled {
 }
 
 @media (max-width: 768px) {
-  body {
-    height: 90vh;
-    margin-top: 5vh;
+  #playPage {
+    /* min-height: 100vh; */
   }
 
   #logoPlayPage {
@@ -251,8 +260,13 @@ button:disabled {
     font-size: 140%;
   }
 
+  #signUser {
+    width: 95vw;
+    margin-bottom: 10px;
+  }
+
   #usersDiv {
-    margin-top: 20px;
+ 
     width: 95vw;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
@@ -268,7 +282,8 @@ button:disabled {
   }
 
   .wheel-wrapper {
-    width: 100vw;
+    width: 110vw;
+    margin-left: 2px;
   }
 
   #winnerPopup h1 {

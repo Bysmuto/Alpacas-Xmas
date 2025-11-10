@@ -17,8 +17,7 @@ function drawWheel(names) {
   const colors = ["#da1021ff", "#2ab91dff"];
   const font = 'bold 16px "Silkscreen"';
   const centerClose = 3.9;
-  // const lineColor = "#700c0cff";
-    const lineColor = "#1b1010ff";
+  const lineColor = "#1b1010ff";
   const scale = 0.32;
   const lineWidth = 8;
 
@@ -140,9 +139,7 @@ function spin(Winner, names) {
     drawWheel(names);
 
     // tick sync
-    const sliceIndex = Math.floor(
-      ((-currentRotation + anglePerSegment / 2) / anglePerSegment) % names.length
-    );
+    const sliceIndex = Math.floor((-currentRotation / anglePerSegment) % names.length);
     const normalizedIndex = (sliceIndex + names.length) % names.length;
     if (normalizedIndex !== lastSliceIndex) {
       playTick();
@@ -187,7 +184,7 @@ function userSelect(names, data) {
 
 spinBtn.onclick = () => {
   preRollSound.play();
-  
+
   setTimeout(() => {
     spin(winner, names);
   }, 1200);
@@ -195,12 +192,11 @@ spinBtn.onclick = () => {
 
 get(ref(db, "Alpacas")).then((snapshot) => {
   if (snapshot.exists()) {
-    const data = Object.entries(snapshot.val())
-    names = data.map((p) => p[0])
-    console.log(data)
-    dataCache = data
-    drawWheel(names)
-    userSelect(names, data)
-  } 
-})
-
+    const data = Object.entries(snapshot.val());
+    names = data.map((p) => p[0]);
+    console.log(data);
+    dataCache = data;
+    drawWheel(names);
+    userSelect(names, data);
+  }
+});

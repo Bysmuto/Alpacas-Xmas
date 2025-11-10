@@ -32,9 +32,11 @@ playBTn.onclick = () => {
   
  
     function createSnowflake() {
+
+      let chars =['*','*','.']
       const snowflake = document.createElement("div");
       snowflake.classList.add("snowflake");
-      snowflake.textContent = "*";
+      snowflake.textContent = chars[Math.floor(Math.random() *chars.length)]
       snowflake.style.left = Math.random() * 100 + "vw";
       snowflake.style.fontSize = Math.random() * 10 + 25 + "px";
       snowflake.style.animationDuration = Math.random() * 3 + 2 + "s";
