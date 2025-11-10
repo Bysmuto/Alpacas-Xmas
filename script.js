@@ -1,8 +1,7 @@
 import { ref, db, get } from "./firebase.js";
-import { playTick, winSound, preRollSound } from "./assets.js";
-import { nextPage } from "./functionalities.js";
+import { playTick, preRollSound } from "./assets.js";
+import { nextPage, announceWinner } from "./functionalities.js";
 
-//global variables
 const spinBtn = document.getElementById("spin");
 
 const canvas = document.getElementById("wheel");
@@ -78,38 +77,13 @@ function drawWheel(names) {
   }
 }
 
-function announceWinner(name) {
-  const popup = document.getElementById("winnerPopup");
-  winSound.play();
-
-  get(ref(db, "MembersInfo")).then((snapshot) => {
-    const data = snapshot.val();
-
-    const { nome, endereço, telefone } = data[name];
-    const info = `${"endereço: " + endereço + "/ nome: " + nome + "/ telefone: " + telefone}`;
-
-    popup.innerHTML = `
-    <h1>${name}</h1>
-    <div class="info">
-       <p>${nome}</p>
-      <p>${endereço}</p>
-      <p>${telefone}</p>
-    </div>
-     <button onclick="navigator.clipboard.writeText('${info}')">copiar info</button>
-   
-    `;
-
-    popup.style.display = "flex";
-  });
-}
-
 function spin(Winner, names) {
   if (isSpinning || !Winner || !user) return;
 
   isSpinning = true;
   spinBtn.disabled = true;
 
-  const spins = 16;
+  const spins = 12;
   const spinDuration = spins * 2000;
 
   const anglePerSegment = (2 * Math.PI) / names.length;
@@ -151,7 +125,7 @@ function spin(Winner, names) {
     } else {
       isSpinning = false;
       spinBtn.disabled = true;
-      announceWinner(`${Winner}`);
+      announceWinner(`${Winner}`, user);
     }
   }
 
@@ -173,7 +147,7 @@ function userSelect(names, data) {
       btn.onclick = () => {
         user = name;
         winner = dataCache.find(([name]) => name === user)[1].secretSanta;
-        console.log(user + "->" + winner);
+        // console.log(user + "->" + winner);
         nextPage("wheel");
       };
     }
@@ -194,7 +168,6 @@ get(ref(db, "Alpacas")).then((snapshot) => {
   if (snapshot.exists()) {
     const data = Object.entries(snapshot.val());
     names = data.map((p) => p[0]);
-    console.log(data);
     dataCache = data;
     drawWheel(names);
     userSelect(names, data);

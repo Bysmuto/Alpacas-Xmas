@@ -42,7 +42,7 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: url("./imgs/bg1.jpg") center/cover no-repeat;
+  background: url("./imgs/bg.jpg") center/cover no-repeat;
   opacity: 0.2;
   z-index: -1;
 }
